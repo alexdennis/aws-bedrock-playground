@@ -1,0 +1,22 @@
+{
+  "name": "aws-bedrock-playground",
+  "version": "1.0.0",
+  "description": "Playing with AWS bedrock client APIs",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "esbuild src/index.ts --bundle --minify --sourcemap --platform=node --target=es2020 --outfile=dist/index.js",
+    "postbuild": "cd dist && zip -r index.zip index.js*",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "esbuild": "^0.19.4",
+    "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.422.1"
+  }
+}
