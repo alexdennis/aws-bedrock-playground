@@ -1,3 +1,5 @@
+// https://docs.anthropic.com/claude/reference/getting-started-with-the-api
+
 export type AnthropicModelID =
   | "anthropic.claude-v1" // Claude v1.3
   | "anthropic.claude-v2" // Claude v2

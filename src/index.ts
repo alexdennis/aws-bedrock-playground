@@ -8,6 +8,8 @@ import {
   AnthropicModelRequest,
   AnthropicModelResponse,
   BedrockModelID,
+  CohereModelRequest,
+  CohereModelResponse,
 } from "./types";
 
 const client = new BedrockRuntimeClient({ region: "us-east-1" });
@@ -62,8 +64,9 @@ const fn = async () => {
     AI21ModelResponse
   >("ai21.j2-ultra-v1", ai21ModelRequest);
 
-  console.log("AI21");
-  console.log(ai21ModelResponse.completions[0].data.text);
+  console.log(
+    "AI21 (Jurassic-2 Ultra): " + ai21ModelResponse.completions[0].data.text
+  );
 
   const anthropicModelRequest: AnthropicModelRequest = {
     prompt: prompt + "\n\nAssistant:",
@@ -77,10 +80,24 @@ const fn = async () => {
   const anthropicModelResponse: AnthropicModelResponse = await invokeModel<
     AnthropicModelRequest,
     AnthropicModelResponse
-  >("anthropic.claude-v1", anthropicModelRequest);
+  >("anthropic.claude-v2", anthropicModelRequest);
 
-  console.log("Anthropic");
+  console.log("Anthropic (Claude v2)");
   console.log(anthropicModelResponse.completion);
+
+  const cohereModelRequest: CohereModelRequest = {
+    prompt,
+    max_tokens: 200,
+    temperature: 0.7,
+  };
+
+  const cohereModelResponse = await invokeModel<
+    CohereModelRequest,
+    CohereModelResponse
+  >("cohere.command-text-v14", cohereModelRequest);
+
+  console.log("Cohere (Command)");
+  console.log(cohereModelResponse.generations[0].text);
 };
 
 fn();
