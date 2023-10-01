@@ -2,12 +2,18 @@ import {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } from "@aws-sdk/client-bedrock-runtime";
-import { AI21ModelRequest, AI21ModelResponse } from "./types";
+import {
+  AI21ModelRequest,
+  AI21ModelResponse,
+  AnthropicModelRequest,
+  AnthropicModelResponse,
+  BedrockModelID,
+} from "./types";
 
 const client = new BedrockRuntimeClient({ region: "us-east-1" });
 
 const invokeModel = async <Request, Response>(
-  modelId: "ai21.j2-ultra-v1",
+  modelId: BedrockModelID,
   modelRequest: Request
 ): Promise<Response> => {
   const command = new InvokeModelCommand({
@@ -30,16 +36,18 @@ System: You are a chatbot designed to give users the ability to talk to characte
 Don't break out of character. Please give chapter and verse numbers that validate your answers where possible. Don't refer to yourself in the third person.
 Respond in less than 500 words and avoid repetition. Only answer questions that you are asked.
 
-Question: 
+Human: 
 `;
 
 const fn = async () => {
-  const modelRequest: AI21ModelRequest = {
-    prompt:
-      PROMPT.replace("{character}", "Alice").replace(
-        "{book}",
-        "Alice in Wonderland"
-      ) + "Why did you follow the white rabbit?",
+  const prompt =
+    PROMPT.replace("{character}", "Violet Baudelaire").replace(
+      "{book}",
+      "A Series of Unfortunate Events"
+    ) + "Who are my siblings and what are they good at?";
+
+  const ai21ModelRequest: AI21ModelRequest = {
+    prompt,
     maxTokens: 200,
     temperature: 0.7,
     topP: 1.0,
@@ -49,12 +57,30 @@ const fn = async () => {
     frequencyPenalty: { scale: 0 },
   };
 
-  const modelResponse: AI21ModelResponse = await invokeModel<
+  const ai21ModelResponse: AI21ModelResponse = await invokeModel<
     AI21ModelRequest,
     AI21ModelResponse
-  >("ai21.j2-ultra-v1", modelRequest);
+  >("ai21.j2-ultra-v1", ai21ModelRequest);
 
-  console.log(JSON.stringify(modelResponse.completions[0].data.text, null, 2));
+  console.log("AI21");
+  console.log(ai21ModelResponse.completions[0].data.text);
+
+  const anthropicModelRequest: AnthropicModelRequest = {
+    prompt: prompt + "\n\nAssistant:",
+    max_tokens_to_sample: 200,
+    temperature: 0.7,
+    top_k: 200,
+    top_p: 1.0,
+    stop_sequences: ["Human:"],
+  };
+
+  const anthropicModelResponse: AnthropicModelResponse = await invokeModel<
+    AnthropicModelRequest,
+    AnthropicModelResponse
+  >("anthropic.claude-v1", anthropicModelRequest);
+
+  console.log("Anthropic");
+  console.log(anthropicModelResponse.completion);
 };
 
 fn();

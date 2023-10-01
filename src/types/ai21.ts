@@ -4,6 +4,10 @@
  * https://docs.ai21.com/reference/j2-complete-api-ref#api-parameters
  */
 
+export type AI21ModelID =
+  | "ai21.j2-ultra-v1" // Jurassic-2 Ultra
+  | "ai21.j2-mid-v1"; // Jurassic-2 Mid
+
 export type AI21ModelRequestPenalty = {
   scale: number;
   applyToNumbers?: boolean;
