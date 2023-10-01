@@ -1,3 +1,9 @@
+/**
+ * This file contains types for the AI21 API.
+ *
+ * https://docs.ai21.com/reference/j2-complete-api-ref#api-parameters
+ */
+
 export type AI21ModelRequestPenalty = {
   scale: number;
   applyToNumbers?: boolean;
