@@ -46,7 +46,7 @@ const fn = async () => {
     PROMPT.replace("{character}", "Violet Baudelaire").replace(
       "{book}",
       "A Series of Unfortunate Events"
-    ) + "Who are my siblings and what are they good at?";
+    ) + "Who are your siblings and what are they good at?";
 
   const ai21ModelRequest: AI21ModelRequest = {
     prompt,
